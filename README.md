@@ -151,14 +151,27 @@ Bot_Detection_System/
 4. Start command: `npm start`
 
 ### Frontend (Vercel/Netlify)
-1. Connect your GitHub repository
-2. Set build settings:
-   - Base directory: `frontend`
-   - Build command: `npm run build`
-   - Publish directory: `frontend/build`
-3. Set environment variable:
-   - `REACT_APP_API_URL` (your deployed backend URL)
-4. Deploy
+
+**Vercel:**
+1. Import project from GitHub
+2. Set **Root Directory** to `frontend`
+3. Framework Preset: Create React App
+4. Build Command: `npm run build`
+5. Output Directory: `build`
+6. Add environment variable:
+   - `REACT_APP_API_URL` = your deployed backend URL
+7. Deploy
+
+**Note:** The `vercel.json` file is included for proper SPA routing.
+
+**Netlify:**
+1. Import from GitHub
+2. Base directory: `frontend`
+3. Build command: `npm run build`
+4. Publish directory: `frontend/build`
+5. Add environment variable:
+   - `REACT_APP_API_URL` = your deployed backend URL
+6. Deploy
 
 ### Important Deployment Notes
 - Update `CORS_ORIGIN` in backend to match your deployed frontend URL
