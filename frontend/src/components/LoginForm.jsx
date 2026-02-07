@@ -14,8 +14,8 @@ const LoginForm = () => {
 
   const { getBehaviorMeta, isReady } = useBotDetection();
   
-  // Use environment variable or fallback to localhost for development
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  // API will be on same domain when deployed to Vercel
+  const API_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
