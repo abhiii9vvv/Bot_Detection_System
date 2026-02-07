@@ -1,7 +1,30 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const connectDB = require('../_utils/db');
-const User = require('../_utils/User');
+const mongoose = require('mongoose');
+
+// MongoDB connection with caching
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function connectDB() {
+  if (cached.conn) return cached.conn;
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(process.env.MONGO_URI, { bufferCommands: false });
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
+}
+
+// User model
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now }
+});
+const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 module.exports = async (req, res) => {
   // Enable CORS
