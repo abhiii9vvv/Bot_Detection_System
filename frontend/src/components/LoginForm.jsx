@@ -7,10 +7,12 @@ const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState('');
+  const [loading, setLoading] = useState(false);
   const [requiresCaptcha, setRequiresCaptcha] = useState(false);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [name, setName] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const { getBehaviorMeta, isReady } = useBotDetection();
   
@@ -47,9 +49,10 @@ const LoginForm = () => {
 
       localStorage.setItem('token', response.data.token);
       setSuccess(isRegisterMode ? 'Account created successfully!' : 'Login successful!');
+      setUserData(response.data.user);
       
       setTimeout(() => {
-        console.log('Logged in:', response.data.user);
+        setIsLoggedIn(true);
       }, 1500);
 
     } catch (err) {
@@ -78,6 +81,54 @@ const LoginForm = () => {
     setSuccess('');
     setRequiresCaptcha(false);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setUserData(null);
+    setEmail('');
+    setPassword('');
+    setName('');
+    setSuccess('');
+    setError('');
+  };
+
+  // Success page after login
+  if (isLoggedIn && userData) {
+    return (
+      <div className="login-form success-page">
+        <div className="success-content">
+          <div className="success-icon">🎉</div>
+          <h2>Welcome{userData.name ? `, ${userData.name}` : ''}!</h2>
+          <p className="success-subtitle">You're successfully logged in</p>
+          
+          <div className="user-info-card">
+            <div className="info-row">
+              <span className="info-label">Name:</span>
+              <span className="info-value">{userData.name || 'N/A'}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">Email:</span>
+              <span className="info-value">{userData.email}</span>
+            </div>
+            <div className="info-row">
+              <span className="info-label">Account ID:</span>
+              <span className="info-value">{userData.id}</span>
+            </div>
+          </div>
+
+          <div className="success-actions">
+            <button className="btn-primary" onClick={() => alert('Dashboard coming soon!')}>
+              Go to Dashboard
+            </button>
+            <button className="btn-secondary" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-form">
