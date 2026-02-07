@@ -13,6 +13,9 @@ const LoginForm = () => {
   const [name, setName] = useState('');
 
   const { getBehaviorMeta, isReady } = useBotDetection();
+  
+  // Use environment variable or fallback to localhost for development
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +43,7 @@ const LoginForm = () => {
         payload.name = name;
       }
       
-      const response = await axios.post(`http://localhost:5000${endpoint}`, payload);
+      const response = await axios.post(`${API_URL}${endpoint}`, payload);
 
       localStorage.setItem('token', response.data.token);
       setSuccess(isRegisterMode ? 'Account created successfully!' : 'Login successful!');
